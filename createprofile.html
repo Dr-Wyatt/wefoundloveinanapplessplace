@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Create Profile</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Rubik" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+
+
+
+
+</head>
+
+<style>
+    body {
+        background-size: cover;
+        background-color: #F5B7B1;
+        opacity: 10%;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: 'Rubik', sans-serif;
+        color: white;
+        height: 100%;
+    }
+
+    body::after {
+        content: "";
+        background: url("assets/images/undraw_messaging_uok8.svg");
+        opacity: 0.5;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;
+        margin-top: 200px;
+        background-size: contain;
+        background-position: left;
+        background-repeat: no-repeat;
+
+    }
+
+    .container {
+        width: 75%;
+        margin: 0 auto;
+        margin-top: 2%;
+    }
+
+    h1 {
+        margin-top: 20px;
+        text-align: center;
+        font-family: 'Lobster', cursive;
+        text-shadow: 2px 2px #EC7063;
+        ;
+    }
+
+    a {
+        margin-top: 6px;
+        margin-left: 30px;
+        font-family: 'Lobster', cursive;
+        text-shadow: 2px 2px #EC7063;
+        ;
+    }
+
+    .btn-primary {
+        background-color: #F1948A !important;
+        border-color: #EC7063;
+        font-family: 'Lobster', cursive;
+    }
+
+    .profile-pic {
+        max-width: 200px;
+        max-height: 200px;
+        display: block;
+    }
+
+    .file-upload {
+        display: none;
+    }
+
+    .circle {
+        border-radius: 1000px !important;
+        overflow: hidden;
+        width: 200px;
+        height: 200px;
+        border: 8px solid rgba(255, 255, 255, 0.7);
+        top: 72px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .p-image {
+        position: absolute;
+        top: 160px;
+        right: 30px;
+        color: #373283;
+        transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+    }
+
+    .p-image:hover {
+        transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+    }
+
+    .upload-button {
+        font-size: 2em;
+    }
+
+    .upload-button:hover {
+        transition: all .3s cubic-bezier(.175, .885, .32, 1.275);
+        color: rgb(245, 240, 240);
+    }
+
+    #imageUpload {
+        display: none;
+    }
+
+    #profileImage {
+        cursor: pointer;
+    }
+
+    #profile-container {
+        overflow: hidden;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        -ms-border-radius: 50%;
+        -o-border-radius: 50%;
+        border-radius: 50%;
+    }
+
+    #profile-container img {
+        width: 200px;
+        height: 200px;
+    }
+
+    @media screen and (max-width: 320px) {
+        .container {
+            background: red;
+            width: 100%;
+        }
+    }
+</style>
+
+<body>
+
+    <div class="container d-flex justify-content-center">
+        <div class="row">
+            <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                <h1>Create Your Profile!</h1>
+            </div>
+            <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="circle" id="profile-container">
+                    <img id="newImage" class="profile-pic" class="fas fa-camera-retro upload-button"
+                        src="assets/images/undraw_super_thank_you_obwk.svg">
+
+                    <div class="p-image" id="profileImage">
+                        <i class="fas fa-camera-retro upload-button"></i>
+                        <input id="imageUpload" class="file-upload" type="file" accept="image/*" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label for="email">Email Address<span class="kv-reqd">*</span></label>
+                            <input type="email" class="form-control" id="email-input" name="email" required>
+                            <div class="alert-danger text-center" id="needEmail">Please enter a valid Email!</div>
+                            <div class="alert-danger text-center" id="emailExists">This Email Already Exists!</div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label for="pwd">Password<span class="kv-reqd">*</span></label>
+                            <input type="password" class="form-control" id="password-input" name="pwd" required>
+                            <div class="alert-danger text-center" id="needPassword">Please enter a password!</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label for="fname">First Name</label>
+                            <input type="text" class="form-control" id="firstname-input" name="fname" required>
+                            <div class="alert-danger text-center" id="needFirstName">Please enter your first name!</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label for="lname">Last Name</label>
+                            <input type="text" class="form-control" id="lastname-input" name="lname" required>
+                            <div class="alert-danger text-center" id="needLastName">Please enter your last name!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label for="IamA">I'm
+                                a:</label>
+                            <select class="form-control" id="intersested-input">
+                                <option>Man interested in women</option>
+                                <option>Woman interested in men</option>
+                                <option>Man interested in men</option>
+                                <option>Woman interested in women</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label for="dayofweek">What day can you date?</label>
+                            <select class="form-control" id="dateDay-input">
+                                <option>Sunday</option>
+                                <option>Monday</option>
+                                <option>Tuesday</option>
+                                <option>Wednesday</option>
+                                <option>Thursday</option>
+                                <option>Friday</option>
+                                <option>Saturday</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label for="fname">Age</label>
+                            <input type="number" class="form-control" id="birthday-input" name="age" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label for="location">What is your zipcode?</label>
+                            <input type="text" class="form-control" id="location-input" name="location" required>
+                            <div class="alert-danger text-center" id="needZipcode">Please enter a valid zipcode!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="about-me">Tell Us About Yourself!</label>
+                            <textarea class="form-control" id="about-input" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <hr>
+                    <div class="text-right">
+                        <button type="submit" id="submit" class="btn btn-primary btn-lg">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyDKH_pLUtgyymaT-xwFyZxdeZBxGfJFWrI",
+            authDomain: "when-are-you-free.firebaseapp.com",
+            databaseURL: "https://when-are-you-free.firebaseio.com",
+            projectId: "when-are-you-free",
+            storageBucket: "",
+            messagingSenderId: "988875414342",
+            appId: "1:988875414342:web:a9f646a4384e2be4"
+        };
+        firebase.initializeApp(config);
+
+        $("#profileImage").click(function () {
+            $("#imageUpload").click();
+        });
+
+        function fasterPreview(uploader) {
+            if (uploader.files && uploader.files[0]) {
+                $('#newImage').attr('src',
+                    window.URL.createObjectURL(uploader.files[0]));
+            }
+        }
+        $("#imageUpload").change(function (e) {
+            fasterPreview(this);
+            var file = e.target.files[0];
+            var storageRef = firebase.storage().ref("project1_image/" + file.name)
+            storageRef.put(file);
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+
+    <script src="assets/javascript/signUp.js"></script>
+</body>
+
+</html>
